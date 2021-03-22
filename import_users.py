@@ -51,8 +51,7 @@ def add_user(body):
 def create_oder(user_body, order_data, order_body):
     body =  {'customer': user_body,
              'items': [order_data], 'metadata': order_body}
-    print(body)
-    # response = requests.post('https://api.voucherify.io/v1/orders', headers = headers, data = json.dumps(body))
+    response = requests.post('https://api.voucherify.io/v1/orders', headers = headers, data = json.dumps(body))
 
 
 if __name__ == "__main__":
