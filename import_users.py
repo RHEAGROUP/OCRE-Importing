@@ -18,13 +18,16 @@ def prepare_body(csv_file):
         csv_reader = csv.reader(csv_file, delimiter=',')
         counter = 0
         for row in csv_reader:
+            product_flag = 0
             if counter == 0:
                 properties = row
             else:
                 user_body = {}
                 order_body = {}
                 for i in range(len(properties)):
-                    if i > 5:
+                    if properties[i] == 'Product':
+                        product_flag = 1
+                    if product_flag:
                         if properties[i] == 'Product':
                             product = row[i]
                         else:
@@ -49,7 +52,7 @@ def create_oder(user_body, order_data, order_body):
     body =  {'customer': user_body,
              'items': [order_data], 'metadata': order_body}
     print(body)
-    response = requests.post('https://api.voucherify.io/v1/orders', headers = headers, data = json.dumps(body))
+    # response = requests.post('https://api.voucherify.io/v1/orders', headers = headers, data = json.dumps(body))
 
 
 if __name__ == "__main__":
