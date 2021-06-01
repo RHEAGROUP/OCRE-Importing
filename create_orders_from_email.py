@@ -7,6 +7,25 @@ from pprint import pprint
 
 email_content_path = sys.argv[1]
 
+
+def create_oder(user_body, order_data):
+    headers = { 'X-App-Id': 'b18fb7d4-8ec2-448b-a72d-15f6da50412d',
+            'X-App-Token': 'e10cc9fc-00df-4785-8c7c-a70ead2161a7',
+            'Content-Type': 'application/json'}
+    items = {'product_id': order_data['product_id'], 'quantity':1}
+    satellite_data = order_data['Satellite data requested']
+    # pprint (satellite_data)
+    for key in satellite_data:
+        order_data[key] = satellite_data[key]
+    del order_data['Satellite data requested']
+    del order_data['product_id']
+    # pprint(order_data)
+    body =  {'customer': user_body,
+             'items': [items], 'metadata': order_data}
+    response = requests.post('https://api.voucherify.io/v1/orders', headers = headers, data = json.dumps(body))
+    print(response.content)
+
+
 mapping =   {'Institutional Email': 'source_id',
             'Select service(s) requested from the following list': 'product_id',
             'Other (specify)': 'Other',
@@ -75,18 +94,7 @@ with open(email_content_path) as f:
                     product_request_data[last_entry][chunks[0]][details[0]] = details[1]
 user_request_data['name'] = full_name
 user_request_data['metadata'] = user_metadata
-pprint(user_request_data)
-print('---------')
-pprint(product_request_data)
+# pprint(user_request_data)
+# print('---------')
+# pprint(product_request_data)
 create_oder(user_request_data, product_request_data)
-
-
-def create_oder(user_body, order_data):
-    headers = { 'X-App-Id': '',
-            'X-App-Token': '',
-            'Content-Type': 'application/json'}
-    items = {'product_id': order_data['product_id'], 'quantity':1}
-    del order_data['product_id']
-    body =  {'customer': user_body,
-             'items': [items], 'metadata': order_data}
-    response = requests.post('https://api.voucherify.io/v1/orders', headers = headers, data = json.dumps(body))
