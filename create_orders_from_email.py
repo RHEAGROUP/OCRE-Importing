@@ -19,6 +19,7 @@ def create_oder(user_body, order_data):
         order_data[key] = satellite_data[key]
     del order_data['Satellite data requested']
     del order_data['product_id']
+    order_data['Status'] = 'Pending'
     # pprint(order_data)
     body =  {'customer': user_body,
              'items': [items], 'metadata': order_data}
