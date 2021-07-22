@@ -9,8 +9,8 @@ email_content_path = sys.argv[1]
 
 
 def create_oder(user_body, order_data):
-    headers = { 'X-App-Id': 'b18fb7d4-8ec2-448b-a72d-15f6da50412d',
-            'X-App-Token': 'e10cc9fc-00df-4785-8c7c-a70ead2161a7',
+    headers = { 'X-App-Id': 'ff4ba7eb-d812-46b7-bd7f-e22080bccb37',
+            'X-App-Token': 'cd8c0470-520a-4366-a716-edbc42726d12',
             'Content-Type': 'application/json'}
     items = {'product_id': order_data['product_id'], 'quantity':1}
     satellite_data = order_data['Satellite data requested']

@@ -3,8 +3,8 @@ import sys
 import csv
 import json
 
-headers = { 'X-App-Id': '19b239b9-49f7-4d64-80a5-cca573f8de24',
-            'X-App-Token': 'f59c0e69-b45b-41d3-9a12-90d6fb05038d',
+headers = { 'X-App-Id': 'ff4ba7eb-d812-46b7-bd7f-e22080bccb37',
+            'X-App-Token': 'cd8c0470-520a-4366-a716-edbc42726d12',
             'Content-Type': 'application/json'}
 
 csv_path = sys.argv[1]
@@ -29,7 +29,7 @@ def prepare_body(csv_file):
         
 def update_vouchers(body):
     response = requests.put('https://api.voucherify.io/v1/vouchers/'+body['metadata']['Code'], headers = headers, data = json.dumps(body))
-    return    
+    print(response.content)    
 
 if __name__ == "__main__":
     prepare_body(csv_path)
