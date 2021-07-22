@@ -1,5 +1,2 @@
-Code,Usage
-q1,32
-q2,89
-q3,200
-q4,3030
+Code, Initial_value,	Monthly_Consumption,	Remaning value,	Date_of_activation,	Distributor, Services_used,	Dataset_used, date_reported	
+ocre_voucher, 3000,	500,	1000,	10/05/2021,	OCRE,	PSI|inSAR,	Sentinel-1 IW L1C |Sentinel-2 L2A, 01/01/2021
