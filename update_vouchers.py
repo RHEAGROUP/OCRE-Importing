@@ -3,10 +3,9 @@ import sys
 import csv
 import json
 
-headers = { 'X-App-Id': 'ff4ba7eb-d812-46b7-bd7f-e22080bccb37',
-            'X-App-Token': 'cd8c0470-520a-4366-a716-edbc42726d12',
+headers = { 'X-App-Id': sys.argv[2],
+            'X-App-Token': sys.argv[3],
             'Content-Type': 'application/json'}
-
 csv_path = sys.argv[1]
 
 def prepare_body(csv_file):

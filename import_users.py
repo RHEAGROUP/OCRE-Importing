@@ -3,12 +3,9 @@ import sys
 import csv
 import json
 
-# TODO TEST THIS WITH REAL FORM DATA
-# PUT THIS ON JUPYTER
-# ADD FEEDBACK FOR ACCEPTING/REJECTING ORDER
 
-headers = { 'X-App-Id': '19b239b9-49f7-4d64-80a5-cca573f8de24',
-            'X-App-Token': 'f59c0e69-b45b-41d3-9a12-90d6fb05038d',
+headers = { 'X-App-Id': sys.argv[2],
+            'X-App-Token': sys.argv[3],
             'Content-Type': 'application/json'}
 
 csv_path = sys.argv[1]

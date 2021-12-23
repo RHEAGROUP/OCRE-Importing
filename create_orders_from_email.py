@@ -1,30 +1,30 @@
+# -*- coding: utf-8 -*-
+
 import requests
 import sys
 import json
 import re
 from pprint import pprint
-# -*- coding: utf-8 -*-
 
-email_content_path = sys.argv[1]
-
-
-def create_oder(user_body, order_data):
-    headers = { 'X-App-Id': 'ff4ba7eb-d812-46b7-bd7f-e22080bccb37',
-            'X-App-Token': 'cd8c0470-520a-4366-a716-edbc42726d12',
+def create_oder(user_body, order_data, token, secret_token):
+    headers = { 'X-App-Id': token,
+            'X-App-Token': secret_token,
             'Content-Type': 'application/json'}
     items = {'product_id': order_data['product_id'], 'quantity':1}
     satellite_data = order_data['Satellite data requested']
-    # pprint (satellite_data)
     for key in satellite_data:
         order_data[key] = satellite_data[key]
     del order_data['Satellite data requested']
     del order_data['product_id']
     order_data['Status'] = 'Pending'
-    # pprint(order_data)
+    order_data['Feedback_submission_date'] = ''
     body =  {'customer': user_body,
              'items': [items], 'metadata': order_data}
     response = requests.post('https://api.voucherify.io/v1/orders', headers = headers, data = json.dumps(body))
-    print(response.content)
+    if response.status_code != 401:
+        id = json.loads(response.content)['id']
+        with open('order_list.txt','a') as orders:
+            orders.write(id+'\n')
 
 
 mapping =   {'Institutional Email': 'source_id',
@@ -43,12 +43,23 @@ user_request_data= {}
 product_request_data = {}
 user_metadata = {}
 
-with open(email_content_path) as f:
-    lines = f.readlines()
+#
+def get_email_contents(email='',path='', token='', secret_token=''):
+    if path != '':
+        dot = u'\u2022'
+        with open(path) as f:
+            lines = f.readlines()
+    else:
+        dot = '*'
+        lines = email.splitlines()
     full_name = ''
     name_counter = 0
     last_entry = ''
-    for line in lines:
+    for i in range(len(lines) - 1):
+        line = lines[i]
+        if line[len(line)-1] == '=':
+            line = line[:len(line)-1]
+            line = line + lines[i+1]
         chunks = line.split(':',1)
         for i in range(len(chunks)):
             chunks[i] = chunks[i].rstrip()
@@ -75,13 +86,14 @@ with open(email_content_path) as f:
             else:
                 product_request_data[chunks[0]] = []
             last_entry = chunks[0]
-        elif chunks[0][0] == u'\u2022':
-            # element = ' '.join(chunks[0].split())
+        elif chunks[0][0] == dot:
             if last_entry != 'Satellite data requested' :
                 element = re.sub('[^A-Za-z0-9\- \+ \ ]+', '', chunks[0])
+                element = element.strip()
                 product_request_data[last_entry].append(element)
             else:
                 element = re.sub('[^A-Za-z0-9\- \+ \( \) \ ]+', '', chunks[0])
+                element = element.strip()
                 if element in mapping:
                     product_request_data[last_entry][mapping[element]] = {}
                 else:
@@ -90,12 +102,12 @@ with open(email_content_path) as f:
             if last_entry == 'Satellite data requested':
                 details = chunks[1].split(':',1)
                 if chunks[0] in mapping:
-                    product_request_data[last_entry][mapping[chunks[0]]]['Area of interest'] = details[0]
+                    product_request_data[last_entry][mapping[chunks[0]]]['Area of interest'] = details[0].strip()
                 else:
-                    product_request_data[last_entry][chunks[0]][details[0]] = details[1]
-user_request_data['name'] = full_name
-user_request_data['metadata'] = user_metadata
-# pprint(user_request_data)
-# print('---------')
-# pprint(product_request_data)
-create_oder(user_request_data, product_request_data)
+                    product_request_data[last_entry][chunks[0]][details[0]] = details[1].strip()
+    user_request_data['name'] = full_name
+    user_request_data['metadata'] = user_metadata
+    create_oder(user_request_data, product_request_data, token, secret_token)
+
+if __name__ == "__main__":
+    get_email_contents(path='email_content.txt')
