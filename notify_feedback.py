@@ -44,4 +44,4 @@ with open('order_list.txt', 'r') as orders:
     orders = orders.split('\n')
     notif = NotifyFeedback()
     for order in orders: 
-        notif.send_email('c.petsas@rheagroup.com', 'Approved')
+        notif.get_status(order)
