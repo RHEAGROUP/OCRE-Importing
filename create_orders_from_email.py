@@ -110,4 +110,4 @@ def get_email_contents(email='',path='', token='', secret_token=''):
     create_oder(user_request_data, product_request_data, token, secret_token)
 
 if __name__ == "__main__":
-    get_email_contents(path='email_content.txt')
+    get_email_contents(path=sys.argv[1], token=sys.argv[2, secret_token=sys.argv[3]])
